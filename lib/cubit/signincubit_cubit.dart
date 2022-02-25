@@ -11,20 +11,21 @@ class SignincubitCubit extends Cubit<SignInCubitState> {
       final response = await http.get(Uri.parse(baseUrl));
       if (response.statusCode == 200) {
         print("SUCCESS");
-        return userexists = true;
+        userexists = true;
       } else {
         print("FAIL");
-        return userexists = false;
+        userexists = false;
       }
     } catch (err, stack) {
       print('$err  \n,$stack');
-    } finally {
-      return userexists;
     }
+    return userexists;
   }
 
-  SignincubitCubit() : super(SignInCubitState(username: '', passWd: ''));
-  givenDetais(String uname, String pwd) {
-    return fetchUserList(uname, pwd);
+  SignincubitCubit() : super(SignInCubitState(loginSuccess: false,isLoading: false));
+  givenDetais(String uname, String pwd) async {
+    emit(SignInCubitState(isLoading: true));
+    bool result = await fetchUserList(uname, pwd);
+    emit(SignInCubitState(loginSuccess: result,isLoading: false));
   }
 }
